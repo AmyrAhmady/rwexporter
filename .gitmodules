@@ -1,0 +1,12 @@
+[submodule "deps/json"]
+	path = deps/json
+	url = https://github.com/nlohmann/json
+[submodule "deps/rwtools"]
+	path = deps/rwtools
+	url = https://github.com/aap/rwtools/
+[submodule "deps/lodepng"]
+	path = deps/lodepng
+	url = https://github.com/lvandeve/lodepng
+[submodule "deps/dirent"]
+	path = deps/dirent
+	url = https://github.com/tronkko/dirent
