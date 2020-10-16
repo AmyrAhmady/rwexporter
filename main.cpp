@@ -1,16 +1,17 @@
 #include <iostream>
-#include <conio.h> 
 #include <dirent.h>
+#include <cstring>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#include <conio.h> 
+#endif
+
 #include "src/export.hpp"
 
 int main(int argc, char ** argv)
 {
 
 	std::cout << "RenderWare Exporter (C) Amyr Ahmady (iAmir) https://github.com/AmyrAhmady \n\n";
-
-	//Export::TexDic("E:\\gtasa-models\\gta3\\bullet.txd", "E:\\rwexporter\\rwexporter\\build\\Debug");
-
-	//return 0;
 
 	if (argc != 4)
 	{
@@ -24,8 +25,10 @@ int main(int argc, char ** argv)
 			"|- path: path of the target file or directory.\n\n" <<
 			"|- output_dir: path of the directory that exported files will save into.\n\n\n\n";
 
-		std::cout << "Press any key to exit...";
-		_getch();
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+			std::cout << "Press any key to exit...";
+			_getch();
+		#endif
 		return 0;
 	}
 

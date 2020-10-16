@@ -7,7 +7,7 @@ set (CMAKE_CXX_STANDARD 11)
 project ("rwexporter")
 
 if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 if(WIN32)

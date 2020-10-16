@@ -9,7 +9,7 @@
 #include "export.hpp"
 
 #pragma warning (disable : 4244) // I KNOW WE ARE NOT MEANT TO DO THAT BUT I HAVE TO FOR FLOAT TO DOUBLE CONVERSION
-#define FLOATROUND(x) (std::ceilf(static_cast<double>(x)*1000000.0)/1000000.0)
+#define FLOATROUND(x) (std::ceil(static_cast<double>(x)*1000000.0)/1000000.0)
 
 using namespace nlohmann;
 
