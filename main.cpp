@@ -50,16 +50,17 @@ int main(int argc, char ** argv)
 			std::cout << "Enumerating all files in " << argv[2] << std::endl;
 			while (file = readdir(inputDir))
 			{
-				std::cout << "Processing " << file->d_name << std::endl;
 				std::size_t found = std::string(file->d_name).find(".dff");
 				if (found != std::string::npos)
 				{
+					std::cout << "Processing " << file->d_name << std::endl;
 					Export::DffModel(std::string(argv[2]) + "/" + file->d_name, argv[3]);
 				}
 
 				found = std::string(file->d_name).find(".txd");
 				if (found != std::string::npos)
 				{
+					std::cout << "Processing " << file->d_name << std::endl;
 					Export::TexDic(std::string(argv[2]) + "/" + file->d_name, argv[3]);
 				}
 			}
