@@ -39,7 +39,8 @@ void Export::DffModel(const std::string & path, const std::string & output)
 	READ_HEADER(CHUNK_STRUCT);
 	uint32_t numAtomics = rw::readUInt32(rw);
 	uint32_t numLights = 0;
-	if (header.length == 0xC) {
+	if (header.length == 0xC) 
+	{
 		numLights = rw::readUInt32(rw);
 		rw.seekg(4, std::ios::cur); /* camera count, unused in gta */
 	}
