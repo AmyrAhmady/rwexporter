@@ -17,7 +17,6 @@ void Export::DffModel(const std::string & path, const std::string & output)
 {
 	json jsonFile = json::array();
 
-
 	std::ifstream rw(path, std::ios::binary);
 
 	if (rw.fail())
@@ -220,16 +219,16 @@ void Export::TexDic(const std::string & path, const std::string & output)
 
 		txd.texList[i].convertTo32Bit();
 
-		std::vector<uint8_t> sup;
+		std::vector<uint8_t> pngData;
 		for (uint32_t j = 0; j < t.width[0] * t.height[0]; j++) 
 		{
-			sup.push_back(t.texels[0][j * 4 + 2]); // R
-			sup.push_back(t.texels[0][j * 4 + 1]); // G
-			sup.push_back(t.texels[0][j * 4 + 0]); // B
-			sup.push_back(t.texels[0][j * 4 + 3]); // A
+			pngData.push_back(t.texels[0][j * 4 + 2]); // R
+			pngData.push_back(t.texels[0][j * 4 + 1]); // G
+			pngData.push_back(t.texels[0][j * 4 + 0]); // B
+			pngData.push_back(t.texels[0][j * 4 + 3]); // A
 		}
 
-		lodepng::encode(std::string(output + "/" + t.name + ".png"), sup, t.width[0], t.height[0], LodePNGColorType::LCT_RGBA, 8);
+		lodepng::encode(std::string(output + "/" + t.name + ".png"), pngData, t.width[0], t.height[0], LodePNGColorType::LCT_RGBA, 8);
 	}
 	std::cout << "]\n";
 }
