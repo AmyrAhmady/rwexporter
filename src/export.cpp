@@ -38,7 +38,7 @@ void Export::DffModel(const std::string & path, const std::string & output)
 	READ_HEADER(CHUNK_STRUCT);
 	uint32_t numAtomics = rw::readUInt32(rw);
 	uint32_t numLights = 0;
-	if (header.length == 0xC) 
+	if (header.length == 0xC)
 	{
 		numLights = rw::readUInt32(rw);
 		rw.seekg(4, std::ios::cur); /* camera count, unused in gta */
@@ -54,7 +54,7 @@ void Export::DffModel(const std::string & path, const std::string & output)
 	{
 		clump->frameList[i].readStruct(rw);
 	}
-		
+
 	for (uint32_t i = 0; i < numFrames; i++)
 	{
 		clump->frameList[i].readExtension(rw);
@@ -78,20 +78,32 @@ void Export::DffModel(const std::string & path, const std::string & output)
 
 	// Read lights
 	clump->lightList.resize(numLights);
-	for (uint32_t i = 0; i < numLights; i++) 
+	for (uint32_t i = 0; i < numLights; i++)
 	{
 		READ_HEADER(CHUNK_STRUCT);
 		clump->lightList[i].frameIndex = rw::readInt32(rw);
 		clump->lightList[i].read(rw);
 	}
-	
+
 	// Looping through frame
 	int frameCount = clump->frameList.size();
 	auto & frames = clump->frameList;
 	for (int i = 0; i < frameCount; i++)
 	{
-		bool hasGeometry = false;
-		
+		bool damageFrame = false;
+
+		// ignore this frame since it's a frame of vehicle LOD (vlo = Vehicle LOD)
+		if (frames[i].name == "chassis_vlo")
+		{
+			continue;
+		}
+
+		// check if it's a frame for a damaged part (usually vehicles) then make damageFrame true
+		if (frames[i].name.find("_dam") != std::string::npos)
+		{
+			damageFrame = true;
+		}
+
 		// Generate a proper 4x4 matrix
 		std::vector<std::vector<double>>
 			matrix =
@@ -101,7 +113,7 @@ void Export::DffModel(const std::string & path, const std::string & output)
 				{ frames[i].rotationMatrix[6], frames[i].rotationMatrix[7], frames[i].rotationMatrix[8], FLOATROUND(frames[i].position[2]) },
 				{ 0.0f, 0.0f, 0.0f, 1.0f }
 		};
-		
+
 		json jsonGeometry;
 		for (auto & atomic : clump->atomicList)
 		{
@@ -109,7 +121,6 @@ void Export::DffModel(const std::string & path, const std::string & output)
 			{
 				json material;
 				auto & geometry = clump->geometryList[atomic.geometryIndex];
-				hasGeometry = true;
 
 				// texCoords (UVs)
 				json texCoords = json::array();
@@ -178,7 +189,7 @@ void Export::DffModel(const std::string & path, const std::string & output)
 				{"name", frames[i].name},
 				{"matrix", matrix},
 				{"geometry", jsonGeometry},
-				{"empty", hasGeometry ? false : true}
+				{"damaged", damageFrame}
 			}
 		);
 	}
@@ -207,7 +218,7 @@ void Export::TexDic(const std::string & path, const std::string & output)
 	{
 		rw::NativeTexture & t = txd.texList[i];
 
-		std::cout << "\t\"" 
+		std::cout << "\t\""
 			<< t.name << "\", \"" << t.maskName << "\", "
 			<< t.width[0] << ", " << t.height[0] << ", "
 			<< t.depth << ", " << std::hex << t.rasterFormat << std::endl;
@@ -220,7 +231,7 @@ void Export::TexDic(const std::string & path, const std::string & output)
 		txd.texList[i].convertTo32Bit();
 
 		std::vector<uint8_t> pngData;
-		for (uint32_t j = 0; j < t.width[0] * t.height[0]; j++) 
+		for (uint32_t j = 0; j < t.width[0] * t.height[0]; j++)
 		{
 			pngData.push_back(t.texels[0][j * 4 + 2]); // R
 			pngData.push_back(t.texels[0][j * 4 + 1]); // G
