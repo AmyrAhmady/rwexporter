@@ -92,8 +92,8 @@ void Export::DffModel(const std::string & path, const std::string & output)
 	{
 		bool damageFrame = false;
 
-		// ignore this frame since it's a frame of vehicle LOD (vlo = Vehicle LOD)
-		if (frames[i].name == "chassis_vlo")
+		// check if current frame is related to LODs since it's a frame of vehicle LOD (vlo = Vehicle LOD)
+		if (frames[i].name.find("_vlo") != std::string::npos)
 		{
 			continue;
 		}
