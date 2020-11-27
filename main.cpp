@@ -13,15 +13,17 @@ int main(int argc, char ** argv)
 
 	std::cout << "RenderWare Exporter (C) Amyr Ahmady (iAmir) https://github.com/AmyrAhmady \n\n";
 
-	if (argc != 4)
+	if (argc < 4)
 	{
 		std::cout << "Usage: rwexporter [flag] path output_dir\n\n\n" <<
 			"|- flags:\n" <<
 			"\t-txd -> parse a texture dictionary and export all the textures\n" << 
 			"\t        as png files into given output directory.\n\n" <<
-			"\t-dff -> parse a dff model and export data into a json file.\n\n" <<
+			"\t-dff -> parse a dff model and export data into a json file.\n" << 
+			"\t        pass an extra flag -amf *after* file paths to convert data to amf instead of json\n\n" <<
 			"\t-dir -> enumerate over all files in the given directory path\n" << 
-			"\t        and export them like what -txd and -dff does.\n\n\n" <<
+			"\t        and export them like what -txd and -dff does.\n" << 
+			"\t        pass an extra flag -amf *after* folder paths to convert data to amf instead of json\n\n\n" <<
 			"|- path: path of the target file or directory.\n\n" <<
 			"|- output_dir: path of the directory that exported files will save into.\n\n\n\n";
 
@@ -34,7 +36,23 @@ int main(int argc, char ** argv)
 
 	if (!strcmp(argv[1], "-dff"))
 	{
-		Export::DffModel(argv[2], argv[3]);
+		if (argv[4])
+		{
+			if (!strcmp(argv[4], "-amf"))
+			{
+				Export::DffModel(argv[2], argv[3], true);
+			}
+			else
+			{
+				Export::DffModel(argv[2], argv[3], false);
+			}
+		}
+		else
+		{
+			Export::DffModel(argv[2], argv[3], false);
+		}
+		
+		
 	}
 	else if (!strcmp(argv[1], "-txd"))
 	{
@@ -54,7 +72,22 @@ int main(int argc, char ** argv)
 				if (found != std::string::npos)
 				{
 					std::cout << "Processing " << file->d_name << std::endl;
-					Export::DffModel(std::string(argv[2]) + "/" + file->d_name, argv[3]);
+					if (argv[4])
+					{
+						if (!strcmp(argv[4], "-amf"))
+						{
+							Export::DffModel(std::string(argv[2]) + "/" + file->d_name, argv[3], true);
+						}
+						else
+						{
+							Export::DffModel(std::string(argv[2]) + "/" + file->d_name, argv[3], false);
+						}
+					}
+					else
+					{
+						Export::DffModel(std::string(argv[2]) + "/" + file->d_name, argv[3], false);
+					}
+					
 				}
 
 				found = std::string(file->d_name).find(".txd");
