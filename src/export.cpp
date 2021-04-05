@@ -384,7 +384,7 @@ void Export::TexDic(const std::string & path, const std::string & output)
 				return std::tolower(ch);
 			});
 
-		//lodepng::encode(output + "/" + imageFileName + ".png", pngData, t.width[0], t.height[0], LodePNGColorType::LCT_RGBA, 8);
+		lodepng::encode(output + "/" + imageFileName + ".png", pngData, t.width[0], t.height[0], LodePNGColorType::LCT_RGBA, 8);
 	}
 	std::cout << "]\n";
 }
